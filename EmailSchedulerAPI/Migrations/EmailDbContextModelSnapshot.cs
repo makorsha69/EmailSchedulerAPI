@@ -39,6 +39,8 @@ namespace EmailSchedulerAPI.Migrations
 
                     b.HasKey("EmailId");
 
+                    b.HasIndex("JobId");
+
                     b.ToTable("Emails");
                 });
 
@@ -102,7 +104,31 @@ namespace EmailSchedulerAPI.Migrations
 
                     b.HasKey("UrlId");
 
+                    b.HasIndex("JobId");
+
                     b.ToTable("Url");
+                });
+
+            modelBuilder.Entity("EmailSchedulerAPI.Models.Email", b =>
+                {
+                    b.HasOne("EmailSchedulerAPI.Models.Job", "job")
+                        .WithMany()
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("job");
+                });
+
+            modelBuilder.Entity("EmailSchedulerAPI.Models.Url", b =>
+                {
+                    b.HasOne("EmailSchedulerAPI.Models.Job", "job")
+                        .WithMany()
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("job");
                 });
 #pragma warning restore 612, 618
         }

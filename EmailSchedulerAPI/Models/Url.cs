@@ -14,8 +14,11 @@ namespace EmailSchedulerAPI.Models
         [Required(ErrorMessage = "The url cannot be empty.")]
         public string URL { get; set; }
 
-        [ForeignKey("Job")]
+        // Foreign key 
         public int JobId { get; set; }
+
+        [ForeignKey("JobId")]
+        public Job job { get; set; }
 
 
     }

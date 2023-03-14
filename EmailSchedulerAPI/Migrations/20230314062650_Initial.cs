@@ -10,20 +10,6 @@ namespace EmailSchedulerAPI.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Emails",
-                columns: table => new
-                {
-                    EmailId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    EMAIL = table.Column<string>(type: "varchar(1000)", nullable: false),
-                    JobId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Emails", x => x.EmailId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Job",
                 columns: table => new
                 {
@@ -44,6 +30,26 @@ namespace EmailSchedulerAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Emails",
+                columns: table => new
+                {
+                    EmailId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EMAIL = table.Column<string>(type: "varchar(1000)", nullable: false),
+                    JobId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Emails", x => x.EmailId);
+                    table.ForeignKey(
+                        name: "FK_Emails_Job_JobId",
+                        column: x => x.JobId,
+                        principalTable: "Job",
+                        principalColumn: "JobId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Url",
                 columns: table => new
                 {
@@ -55,7 +61,23 @@ namespace EmailSchedulerAPI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Url", x => x.UrlId);
+                    table.ForeignKey(
+                        name: "FK_Url_Job_JobId",
+                        column: x => x.JobId,
+                        principalTable: "Job",
+                        principalColumn: "JobId",
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Emails_JobId",
+                table: "Emails",
+                column: "JobId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Url_JobId",
+                table: "Url",
+                column: "JobId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -64,10 +86,10 @@ namespace EmailSchedulerAPI.Migrations
                 name: "Emails");
 
             migrationBuilder.DropTable(
-                name: "Job");
+                name: "Url");
 
             migrationBuilder.DropTable(
-                name: "Url");
+                name: "Job");
         }
     }
 }
