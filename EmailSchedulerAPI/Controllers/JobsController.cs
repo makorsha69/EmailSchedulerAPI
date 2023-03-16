@@ -85,7 +85,7 @@ namespace EmailSchedulerAPI.Controllers
         }
 
         // DELETE: api/Jobs/5
-        [HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteJob(int id)
         {
             var job = await _context.Job.FindAsync(id);
@@ -97,6 +97,23 @@ namespace EmailSchedulerAPI.Controllers
             _context.Job.Remove(job);
             await _context.SaveChangesAsync();
 
+            return Ok();
+        }
+
+        // DELETE: api/Jobs/5
+        [HttpPut("softDelete/{id}")]
+        public async Task<IActionResult> SoftDeleteJob(int id)
+        {
+            var job = await _context.Job.FindAsync(id);
+            if (job != null)
+            {
+                job.IsActive = false;
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                return NotFound();
+            }
             return NoContent();
         }
 
