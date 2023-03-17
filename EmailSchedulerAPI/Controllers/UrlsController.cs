@@ -100,6 +100,22 @@ namespace EmailSchedulerAPI.Controllers
             return NoContent();
         }
 
+        // DELETE: api/Urls/5
+        [HttpPost("PostURL/{id}")]
+        public async Task<IActionResult> PostSeperateUrl(int JobID, string fullURL)
+        {
+            var url = await _context.Job.FindAsync(JobID);
+            string[] urls = fullURL.Split(',');
+            for(int i=0;i<urls.Length;i++)
+            {
+              urls[i].Trim();
+                _context.Url.Add(new Url { JobId = JobID, URL = urls[i].Trim() });
+                await _context.SaveChangesAsync();
+            }
+
+            return NoContent();
+        }
+
         private bool UrlExists(int id)
         {
             return _context.Url.Any(e => e.UrlId == id);
